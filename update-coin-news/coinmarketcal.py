@@ -45,7 +45,7 @@ def crawl_coinmarketcal(conn, cursor, coins):
             # If it's news targeting market existing on DB, then insert to coin-news matring table
             for coin in coins:
                 if coin[0].split('-')[-1] in targeting_market: # coin[0] = market
-                    query = "INSERT INTO coryndb.coins_news(market, news_id) VALUES('{}', {})".format(coin[0], new_news_id)
+                    query = "INSERT INTO coryndb.coins_news(market, news_id, id) VALUES('{}', {}, {})".format(coin[0], new_news_id, 0)
                     cursor.execute(query)
                 
         if is_finished == True: break

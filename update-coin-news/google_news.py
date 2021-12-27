@@ -42,7 +42,7 @@ def crawl_google_news(conn, cursor, coins):
             assert(new_news_id != -1)
 
             # Insert to coins - news matching table
-            query = "INSERT IGNORE INTO coryndb.coins_news(market, news_id) VALUES('{}', {})".format(market, new_news_id)
+            query = "INSERT IGNORE INTO coryndb.coins_news(market, news_id, id) VALUES('{}', {}, {})".format(market, new_news_id, 0)
             cursor.execute(query)   
 
     conn.commit()
