@@ -28,14 +28,14 @@ def lambda_handler(event, context):
         closed_price = price['prev_closing_price']
         change_rate = price['signed_change_rate']
         change_price = price['signed_change_price']
+        trade_volume = price['acc_trade_volume_24h']
         timestamp = price['trade_timestamp']
         source = 'upbit'
-        unit = 'test'
+        unit = 'day'
         currency = market.split('-')[0]
 
-        query = "INSERT INTO coryndb.prices(market, opening_price, high_price, low_price, trade_price, closed_price, change_rate, change_price, timestamp, source, unit, currency) VALUES('{0}',{1},{2},{3},{4},{5},{6},{7},{8},'{9}','{10}','{11}')".format(market, opening_price, high_price, low_price, trade_price, closed_price, change_rate, change_price, timestamp, source, unit, currency)
+        query = "INSERT INTO coryndb.prices(market, opening_price, high_price, low_price, trade_price, closed_price, change_rate, change_price, trade_volume, timestamp, source, unit, currency) VALUES('{0}',{1},{2},{3},{4},{5},{6},{7},{8},{9},'{10}','{11}','{12}')".format(market, opening_price, high_price, low_price, trade_price, closed_price, change_rate, change_price, trade_volume, timestamp, source, unit, currency)
         cursor.execute(query)
         
     conn.commit()
     conn.close()
-        
