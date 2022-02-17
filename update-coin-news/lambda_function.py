@@ -13,7 +13,7 @@ def lambda_handler(event, context):
     coins = cursor.fetchall()
     
     # Crawling process
-    crawl_coinmarketcal(conn, cursor, coins)
+    crawl_coinmarketcal(conn, cursor)
     crawl_google_news(conn, cursor, coins)
     
     conn.close()

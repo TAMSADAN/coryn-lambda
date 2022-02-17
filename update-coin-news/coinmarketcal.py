@@ -4,7 +4,7 @@ import requests
 import pymysql
 from bs4 import BeautifulSoup
 
-def crawl_coinmarketcal(conn, cursor, coins):
+def crawl_coinmarketcal(conn, cursor):
     base_url = 'https://coinmarketcal.com'
 
     for i in range(1,10):
@@ -29,26 +29,11 @@ def crawl_coinmarketcal(conn, cursor, coins):
             news_type = 'good'
             source = 'coinmarketcal'
             url = base_url + card.select_one('div.card__body>a')['href']
-
-            # Check if it's already crawled one
-            query = "SELECT * from coryndb.news WHERE url='{}'".format(url)
-            cursor.execute(query)
-            if cursor.fetchone() != None:
-                is_finished = True
-                break
             
             # Insert to news table
-            query = "INSERT INTO coryndb.news(title, posted_date, targeting_date, news_type, source, url) VALUES('{}', '{}', '{}', '{}', '{}', '{}')".format(title, posted_date, targeting_date, news_type, source, url)
-            cursor.execute(query)
-            new_news_id = cursor.lastrowid
-
-            # If it's news targeting market existing on DB, then insert to coin-news matring table
-            for coin in coins:
-                if coin[0].split('-')[-1] in targeting_market: # coin[0] = market
-                    query = "INSERT INTO coryndb.coins_news(market, news_id, id) VALUES('{}', {}, {})".format(coin[0], new_news_id, 0)
-                    cursor.execute(query)
+            for ticker in targeting_market:
+                query = "INSERT IGNORE INTO coin_news(title, posted_date, targeting_date, ticker, type, source, url) VALUES('{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(title, posted_date, targeting_date, ticker, news_type, source, url)
+                cursor.execute(query)
                 
-        if is_finished == True: break
-    
     conn.commit()
     

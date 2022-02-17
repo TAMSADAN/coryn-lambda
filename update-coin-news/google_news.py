@@ -28,21 +28,7 @@ def crawl_google_news(conn, cursor, coins):
             # targeting_date = null
             news_type = 'normal'
 
-            # Insert to table only when it's still not crawled one
-            query = "SELECT * from coryndb.news WHERE url='{}'".format(url)
+            query = "INSERT IGNORE INTO coin_news(title, posted_date, targeting_date, ticker, type, source, url) VALUES('{}', '{}', null, '{}', '{}', '{}', '{}')".format(title, posted_date if posted_date else 'null', ticker, news_type, source, url)
             cursor.execute(query)
-            result = cursor.fetchone()
-            new_news_id = -1
-            if result == None:
-                query = "INSERT INTO coryndb.news(title, posted_date, targeting_date, news_type, source, url) VALUES('{}', '{}', null, '{}', '{}', '{}')".format(title, posted_date if posted_date else 'null', news_type, source, url)
-                cursor.execute(query)
-                new_news_id = cursor.lastrowid
-            else: new_news_id = result[0]
-
-            assert(new_news_id != -1)
-
-            # Insert to coins - news matching table
-            query = "INSERT IGNORE INTO coryndb.coins_news(market, news_id, id) VALUES('{}', {}, {})".format(market, new_news_id, 0)
-            cursor.execute(query)   
 
     conn.commit()
