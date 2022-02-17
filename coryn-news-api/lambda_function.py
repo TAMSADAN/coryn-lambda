@@ -25,8 +25,7 @@ def lambda_handler(event, context):
         
     query += " ORDER BY id DESC"
     
-    if limit != "":
-        query += " LIMIT " + limit
+    query += " LIMIT " + (limit if limit != "" else "100")
     
     cursor.execute(query)
     result = cursor.fetchall()
